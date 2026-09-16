@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   TripMate Design System
+   03-design-system.md 기준 토큰 정의
+------------------------------------------------------------------- */
+
+@theme {
+  /* Main */
+  --color-primary: #8b5cf6;
+  --color-primary-light: #a78bfa;
+  --color-primary-soft: #ede9fe;
+  --color-secondary: #67d9d5;
+  --color-secondary-soft: #d9f7f5;
+  --color-accent-pink: #f3a6c1;
+  --color-accent-blue: #91cff5;
+  --color-background: #f7f3fa;
+  --color-surface: #ffffff;
+
+  /* Text */
+  --color-ink: #292533;
+  --color-ink-secondary: #625d6d;
+  --color-ink-tertiary: #918b9c;
+  --color-ink-disabled: #b8b3c0;
+
+  /* Semantic */
+  --color-success: #35c99a;
+  --color-warning: #f4b860;
+  --color-error: #e8798f;
+  --color-info: #72b7e8;
+  --color-neutral: #8e8999;
+
+  /* Radius */
+  --radius-field: 14px;
+  --radius-card: 20px;
+  --radius-card-lg: 24px;
+
+  /* Font */
+  --font-sans: "Pretendard Variable", "Pretendard", "Inter", -apple-system,
+    BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+:root {
+  --glass-white: rgba(255, 255, 255, 0.45);
+  --glass-white-strong: rgba(255, 255, 255, 0.65);
+  --glass-white-soft: rgba(255, 255, 255, 0.28);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-border-soft: rgba(255, 255, 255, 0.35);
+  --glass-blur: blur(20px);
+  --shadow-glass: 0 8px 32px rgba(80, 60, 120, 0.1);
+  --shadow-glass-sm: 0 4px 16px rgba(80, 60, 120, 0.07);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+@font-face {
+  font-family: "Pretendard Variable";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2")
+    format("woff2-variations");
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(167, 139, 250, 0.18), transparent 35%),
+    radial-gradient(circle at 90% 20%, rgba(103, 217, 213, 0.14), transparent 35%),
+    radial-gradient(circle at 70% 90%, rgba(243, 166, 193, 0.16), transparent 35%),
+    #f7f3fa;
+  background-attachment: fixed;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ------------------------------------------------------------------
+   Glass 레이어 — 레이어별로 강도를 다르게 적용한다.
+   soft   : 일반 콘텐츠 카드
+   base   : 주요 Floating Card
+   strong : Navigation / Modal
+------------------------------------------------------------------- */
+
+.glass-soft,
+.glass-base,
+.glass-strong {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.glass-soft {
+  background: var(--glass-white-soft);
+  border-color: var(--glass-border-soft);
+  box-shadow: var(--shadow-glass-sm), var(--highlight-top);
+}
+
+.glass-base {
+  background: var(--glass-white);
+  border-color: var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-glass), var(--highlight-top);
+}
+
+.glass-strong {
+  background: var(--glass-white-strong);
+  border-color: var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-glass), var(--highlight-top);
+}
+
+/* 스크롤바 — 날짜 탭 등 가로 스크롤 영역에 사용 */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background: var(--color-primary-soft);
+  color: var(--color-ink);
+}
+
+/* 포커스 링 통일 */
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
