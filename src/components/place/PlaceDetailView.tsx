@@ -26,7 +26,7 @@ export function PlaceDetailView({ tripId, placeId }: PlaceDetailViewProps) {
   const hydrated = useHydrated();
   const trip = useTripStore((state) => state.trips.find((t) => t.id === tripId));
   const place = useTripStore((state) =>
-    state.places.find((p) => p.id === placeId),
+    state.places.find((p) => p.id === placeId && p.tripId === tripId),
   );
   const removePlace = useTripStore((state) => state.removePlace);
 
@@ -171,7 +171,11 @@ export function PlaceDetailView({ tripId, placeId }: PlaceDetailViewProps) {
       </div>
 
       {editOpen ? (
-        <PlaceFormModal onClose={() => setEditOpen(false)} editing={place} />
+        <PlaceFormModal
+          onClose={() => setEditOpen(false)}
+          tripId={tripId}
+          editing={place}
+        />
       ) : null}
 
       {scheduleOpen ? (

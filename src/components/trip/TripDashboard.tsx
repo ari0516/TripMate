@@ -22,11 +22,16 @@ export function TripDashboard({ tripId }: { tripId: string }) {
   const hydrated = useHydrated();
   const trip = useTripStore((state) => state.trips.find((t) => t.id === tripId));
   const schedules = useTripStore((state) => state.schedules);
-  const places = useTripStore((state) => state.places);
+  const allPlaces = useTripStore((state) => state.places);
 
   const dates = useMemo(
     () => (trip ? buildDateRange(trip.startDate, trip.endDate) : []),
     [trip],
+  );
+
+  const places = useMemo(
+    () => allPlaces.filter((p) => p.tripId === tripId),
+    [allPlaces, tripId],
   );
 
   const tripSchedules = useMemo(

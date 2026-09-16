@@ -31,9 +31,14 @@ export function PlaceListView({ tripId }: { tripId: string }) {
     [trip],
   );
 
+  const tripPlaces = useMemo(
+    () => places.filter((p) => p.tripId === tripId),
+    [places, tripId],
+  );
+
   const filtered = useMemo(() => {
     const q = keyword.trim().toLowerCase();
-    return places.filter((place) => {
+    return tripPlaces.filter((place) => {
       const matchCategory = filter === "전체" || place.category === filter;
       const matchKeyword =
         !q ||
@@ -41,7 +46,7 @@ export function PlaceListView({ tripId }: { tripId: string }) {
         place.address.toLowerCase().includes(q);
       return matchCategory && matchKeyword;
     });
-  }, [places, filter, keyword]);
+  }, [tripPlaces, filter, keyword]);
 
   if (!hydrated) return <PlaceSkeleton />;
   if (!trip) return <TripNotFound />;
@@ -88,17 +93,17 @@ export function PlaceListView({ tripId }: { tripId: string }) {
         <EmptyState
           icon="📍"
           title={
-            places.length === 0
+            tripPlaces.length === 0
               ? "저장한 장소가 없어요"
               : "조건에 맞는 장소가 없어요"
           }
           description={
-            places.length === 0
+            tripPlaces.length === 0
               ? "방문하고 싶은 장소를 저장하면 일정에 추가할 수 있어요."
               : "카테고리나 검색어를 바꿔보세요."
           }
           action={
-            places.length === 0 ? (
+            tripPlaces.length === 0 ? (
               <Button onClick={() => setPlaceModalOpen(true)}>
                 ＋ 장소 추가
               </Button>
@@ -119,7 +124,10 @@ export function PlaceListView({ tripId }: { tripId: string }) {
       )}
 
       {placeModalOpen ? (
-        <PlaceFormModal onClose={() => setPlaceModalOpen(false)} />
+        <PlaceFormModal
+          onClose={() => setPlaceModalOpen(false)}
+          tripId={tripId}
+        />
       ) : null}
 
       {presetPlaceId !== null ? (

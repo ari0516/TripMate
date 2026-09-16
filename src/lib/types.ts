@@ -31,6 +31,7 @@ export interface Trip {
 
 export interface Place {
   id: string;
+  tripId: string;
   name: string;
   category: PlaceCategory;
   address: string;

@@ -13,7 +13,8 @@ import {
 import { timeToMinutes } from "@/lib/date";
 import type { Expense, Place, Schedule, Trip } from "@/lib/types";
 
-const STORAGE_KEY = "tripmate-store-v1";
+// v2: Place에 tripId가 추가되어 이전 스키마와 호환되지 않는다.
+const STORAGE_KEY = "tripmate-store-v2";
 
 function createId(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;

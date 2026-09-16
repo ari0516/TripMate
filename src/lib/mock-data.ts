@@ -35,6 +35,7 @@ export const mockTrips: Trip[] = [
 export const mockPlaces: Place[] = [
   {
     id: "place-1",
+    tripId: "trip-1",
     name: "센소지",
     category: "관광지",
     address: "일본 도쿄도 다이토구 아사쿠사",
@@ -45,6 +46,7 @@ export const mockPlaces: Place[] = [
   },
   {
     id: "place-2",
+    tripId: "trip-1",
     name: "멘야무사시",
     category: "맛집",
     address: "일본 도쿄도 신주쿠구",
@@ -54,6 +56,7 @@ export const mockPlaces: Place[] = [
   },
   {
     id: "place-3",
+    tripId: "trip-1",
     name: "Blue Bottle Coffee 시부야",
     category: "카페",
     address: "일본 도쿄도 시부야구",
@@ -64,6 +67,7 @@ export const mockPlaces: Place[] = [
   },
   {
     id: "place-4",
+    tripId: "trip-1",
     name: "긴자 식스",
     category: "쇼핑",
     address: "일본 도쿄도 주오구 긴자",
@@ -73,6 +77,7 @@ export const mockPlaces: Place[] = [
   },
   {
     id: "place-5",
+    tripId: "trip-1",
     name: "시부야 스카이",
     category: "관광지",
     address: "일본 도쿄도 시부야구 시부야 스크램블 스퀘어",
@@ -81,11 +86,22 @@ export const mockPlaces: Place[] = [
   },
   {
     id: "place-6",
+    tripId: "trip-1",
     name: "호텔 그레이서리 신주쿠",
     category: "숙소",
     address: "일본 도쿄도 신주쿠구 가부키초",
     openingHours: {},
     closedDays: [],
+  },
+  {
+    id: "place-7",
+    tripId: "trip-2",
+    name: "왓 아룬",
+    category: "관광지",
+    address: "태국 방콕 방콕야이",
+    openingHours: everyday("08:00", "18:00"),
+    closedDays: [],
+    mapUrl: "https://maps.google.com/?q=Wat+Arun",
   },
 ];
 

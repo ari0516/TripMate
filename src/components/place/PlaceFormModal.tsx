@@ -16,6 +16,8 @@ import { useTripStore } from "@/store/useTripStore";
  */
 interface PlaceFormModalProps {
   onClose: () => void;
+  /** 추가 모드일 때 장소가 속할 여행 */
+  tripId?: string;
   /** 수정 모드일 때 대상 장소 */
   editing?: Place | null;
 }
@@ -46,6 +48,7 @@ function toOpeningHours(draft: HoursDraft): OpeningHours {
 
 export function PlaceFormModal({
   onClose,
+  tripId,
   editing,
 }: PlaceFormModalProps) {
   const addPlace = useTripStore((state) => state.addPlace);
@@ -86,6 +89,7 @@ export function PlaceFormModal({
     if (Object.keys(nextErrors).length > 0) return;
 
     const payload = {
+      tripId: editing?.tripId ?? tripId ?? "",
       name: name.trim(),
       category,
       address: address.trim(),

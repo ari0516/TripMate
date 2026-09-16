@@ -39,7 +39,7 @@ export function ScheduleFormModal({
   editing,
   presetPlaceId,
 }: ScheduleFormModalProps) {
-  const places = useTripStore((state) => state.places);
+  const allPlaces = useTripStore((state) => state.places);
   const addSchedule = useTripStore((state) => state.addSchedule);
   const updateSchedule = useTripStore((state) => state.updateSchedule);
   const removeSchedule = useTripStore((state) => state.removeSchedule);
@@ -53,6 +53,11 @@ export function ScheduleFormModal({
   const [keyword, setKeyword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const places = useMemo(
+    () => allPlaces.filter((p) => p.tripId === tripId),
+    [allPlaces, tripId],
+  );
 
   const selectedPlace: Place | undefined = useMemo(
     () => places.find((p) => p.id === placeId),
