@@ -40,8 +40,9 @@ interface TripState {
   updateSchedule: (id: string, patch: Partial<Omit<Schedule, "id">>) => void;
   removeSchedule: (id: string) => void;
 
-  // Expense (Phase 2 대비)
+  // Expense
   addExpense: (input: Omit<Expense, "id">) => Expense;
+  updateExpense: (id: string, patch: Partial<Omit<Expense, "id">>) => void;
   removeExpense: (id: string) => void;
 
   /** 모든 데이터를 초기 mock 상태로 되돌린다. */
@@ -110,6 +111,12 @@ export const useTripStore = create<TripState>()(
         set((state) => ({ expenses: [...state.expenses, expense] }));
         return expense;
       },
+      updateExpense: (id, patch) =>
+        set((state) => ({
+          expenses: state.expenses.map((e) =>
+            e.id === id ? { ...e, ...patch } : e,
+          ),
+        })),
       removeExpense: (id) =>
         set((state) => ({
           expenses: state.expenses.filter((e) => e.id !== id),

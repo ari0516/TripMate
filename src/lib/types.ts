@@ -76,3 +76,15 @@ export interface OpenStatusResult {
   /** 해당 날짜의 영업시간 문자열 (예: "06:00 ~ 17:00") */
   hoursText: string | null;
 }
+
+/** 예산 사용률 상태 — 01-feature-spec.md §5-2 기준 (0~79 기본 / 80~89 주의 / 90+ 경고) */
+export type BudgetStatus = "normal" | "warning" | "danger";
+
+export interface BudgetSummary {
+  budget: number;
+  spent: number;
+  remaining: number;
+  /** 사용률(%), 예산 초과 시 100을 넘을 수 있다 */
+  ratio: number;
+  status: BudgetStatus;
+}

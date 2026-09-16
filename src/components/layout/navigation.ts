@@ -32,4 +32,12 @@ export const TRIP_NAV_ITEMS: NavItem[] = [
     isActive: (pathname, tripId) =>
       pathname.startsWith(`/trips/${tripId}/places`),
   },
+  {
+    key: "expenses",
+    label: "가계부",
+    icon: "💳",
+    href: (tripId) => `/trips/${tripId}/expenses`,
+    isActive: (pathname, tripId) =>
+      pathname.startsWith(`/trips/${tripId}/expenses`),
+  },
 ];
