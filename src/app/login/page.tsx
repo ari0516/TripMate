@@ -70,7 +70,7 @@ function LoginForm() {
             <p className="text-[13px] leading-relaxed text-[#625d6d]">
               {email} 로 로그인 링크를 보냈습니다.
               <br />
-              메일의 링크를 누르면 자동으로 로그인됩니다.
+              메일의 링크를 눌러 로그인을 완료해주세요.
             </p>
           </div>
         ) : (
