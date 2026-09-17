@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { DateTabs } from "@/components/schedule/DateTabs";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { ScheduleFormModal } from "@/components/schedule/ScheduleFormModal";
+import { SchedulePlaceSheet } from "@/components/schedule/SchedulePlaceSheet";
 import { TripNotFound } from "@/components/trip/TripNotFound";
 import { buildDateRange, formatFullKoreanDate } from "@/lib/date";
 import type { Schedule } from "@/lib/types";
@@ -21,6 +22,9 @@ export function ScheduleView({ tripId }: { tripId: string }) {
   const [pickedDate, setPickedDate] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Schedule | null>(null);
+  const [viewingSchedule, setViewingSchedule] = useState<Schedule | null>(
+    null,
+  );
 
   const dates = useMemo(
     () => (trip ? buildDateRange(trip.startDate, trip.endDate) : []),
@@ -121,17 +125,25 @@ export function ScheduleView({ tripId }: { tripId: string }) {
           />
         ) : (
           <div className="space-y-2.5">
-            {daySchedules.map((schedule) => (
-              <ScheduleCard
-                key={schedule.id}
-                schedule={schedule}
-                place={places.find((p) => p.id === schedule.placeId)}
-                onClick={() => {
-                  setEditing(schedule);
-                  setModalOpen(true);
-                }}
-              />
-            ))}
+            {daySchedules.map((schedule) => {
+              const place = places.find((p) => p.id === schedule.placeId);
+              return (
+                <ScheduleCard
+                  key={schedule.id}
+                  schedule={schedule}
+                  place={place}
+                  onClick={() => {
+                    if (place) {
+                      setViewingSchedule(schedule);
+                    } else {
+                      // 삭제된 장소는 보여줄 정보가 없으므로 바로 일정 수정으로 진입한다.
+                      setEditing(schedule);
+                      setModalOpen(true);
+                    }
+                  }}
+                />
+              );
+            })}
           </div>
         )}
       </section>
@@ -148,6 +160,28 @@ export function ScheduleView({ tripId }: { tripId: string }) {
           editing={editing}
         />
       ) : null}
+
+      {viewingSchedule
+        ? (() => {
+            const place = places.find(
+              (p) => p.id === viewingSchedule.placeId,
+            );
+            if (!place) return null;
+            return (
+              <SchedulePlaceSheet
+                schedule={viewingSchedule}
+                place={place}
+                tripId={tripId}
+                onClose={() => setViewingSchedule(null)}
+                onEditSchedule={() => {
+                  setEditing(viewingSchedule);
+                  setModalOpen(true);
+                  setViewingSchedule(null);
+                }}
+              />
+            );
+          })()
+        : null}
     </div>
   );
 }
