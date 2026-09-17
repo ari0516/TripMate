@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/auth/confirm"];
+const PUBLIC_PATHS = ["/login"];
 
 /**
  * Next.js 16 부터 Middleware 는 Proxy 로 이름이 바뀌었다 (동작은 동일).
