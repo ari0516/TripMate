@@ -1,22 +1,41 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { ButtonLink } from "@/components/common/Button";
 import { EmptyState } from "@/components/common/EmptyState";
 import { TripCard } from "@/components/trip/TripCard";
+import { createClient } from "@/lib/supabase/client";
 import { useHydrated, useTripStore } from "@/store/useTripStore";
 
 export function TripListView() {
+  const router = useRouter();
   const hydrated = useHydrated();
   const trips = useTripStore((state) => state.trips);
   const schedules = useTripStore((state) => state.schedules);
   const expenses = useTripStore((state) => state.expenses);
 
+  async function handleLogout() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+    router.refresh();
+  }
+
   return (
     <div className="mx-auto w-full max-w-[880px] flex-1 px-4 pt-6 pb-16 sm:px-6">
-      <header className="flex items-center gap-2 text-[17px] font-bold text-[#292533]">
-        <span aria-hidden>✈️</span> TripMate
+      <header className="flex items-center justify-between gap-2">
+        <p className="flex items-center gap-2 text-[17px] font-bold text-[#292533]">
+          <span aria-hidden>✈️</span> TripMate
+        </p>
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="cursor-pointer text-[13px] font-medium text-[#918b9c] hover:text-[#625d6d]"
+        >
+          로그아웃
+        </button>
       </header>
 
       <div className="mt-8 flex items-end justify-between gap-3">
