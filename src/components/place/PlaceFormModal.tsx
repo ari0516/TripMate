@@ -7,6 +7,7 @@ import { Chip, Field, SelectInput, TextInput } from "@/components/common/Field";
 import { Modal } from "@/components/common/Modal";
 import { cn } from "@/lib/cn";
 import { DAY_KEYS, DAY_LABEL, PLACE_CATEGORIES } from "@/lib/constants";
+import type { PlaceSearchResult } from "@/lib/google-places";
 import type { DayKey, OpeningHours, Place, PlaceCategory } from "@/lib/types";
 import { useTripStore } from "@/store/useTripStore";
 
@@ -69,6 +70,41 @@ export function PlaceFormModal({
   const [blogUrl, setBlogUrl] = useState(editing?.blogUrl ?? "");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<PlaceSearchResult[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+
+  async function handleSearch() {
+    if (!searchQuery.trim()) return;
+    setSearching(true);
+    setSearchError(null);
+    try {
+      const res = await fetch(
+        `/api/places/search?q=${encodeURIComponent(searchQuery.trim())}`,
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "검색에 실패했습니다.");
+      setSearchResults(data.results ?? []);
+    } catch (err) {
+      setSearchError(err instanceof Error ? err.message : "검색에 실패했습니다.");
+      setSearchResults([]);
+    } finally {
+      setSearching(false);
+    }
+  }
+
+  function applySearchResult(result: PlaceSearchResult) {
+    setName(result.name);
+    setAddress(result.address);
+    setHours(toDraft(result.openingHours));
+    setClosedDays(result.closedDays);
+    if (result.mapUrl) setMapUrl(result.mapUrl);
+    setSearchResults([]);
+    setSearchQuery("");
+    setErrors({});
+  }
+
   /** 첫 요일 값을 나머지 요일에 그대로 복사한다 */
   function applyToAllDays() {
     const first = hours.mon;
@@ -116,6 +152,61 @@ export function PlaceFormModal({
       }
     >
       <div className="space-y-5">
+        <Field
+          label="장소 검색으로 자동 입력"
+          hint="Google 지도에서 검색해 주소·영업시간을 자동으로 채웁니다."
+        >
+          <div className="flex gap-2">
+            <TextInput
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch();
+                }
+              }}
+              placeholder="예) 센소지, 아사쿠사"
+              aria-label="장소 검색"
+            />
+            <Button
+              type="button"
+              variant="secondary"
+              className="shrink-0"
+              disabled={searching}
+              onClick={handleSearch}
+            >
+              {searching ? "검색 중..." : "검색"}
+            </Button>
+          </div>
+
+          {searchError ? (
+            <p className="mt-2 text-[12px] font-medium text-[#c2506a]">
+              {searchError}
+            </p>
+          ) : null}
+
+          {searchResults.length > 0 ? (
+            <div className="mt-2 max-h-[220px] space-y-1.5 overflow-y-auto pr-0.5">
+              {searchResults.map((result) => (
+                <button
+                  key={result.placeId}
+                  type="button"
+                  onClick={() => applySearchResult(result)}
+                  className="block w-full cursor-pointer rounded-[14px] border border-white/60 bg-white/50 px-3.5 py-3 text-left transition hover:bg-white/80"
+                >
+                  <p className="truncate text-[14px] font-semibold text-[#292533]">
+                    {result.name}
+                  </p>
+                  <p className="truncate text-[12px] text-[#918b9c]">
+                    {result.address}
+                  </p>
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </Field>
+
         <Field label="장소명" required htmlFor="place-name" error={errors.name}>
           <TextInput
             id="place-name"
