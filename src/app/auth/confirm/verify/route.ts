@@ -17,11 +17,13 @@ export async function POST(request: NextRequest) {
       token_hash: tokenHash,
     });
     if (!error) {
-      return NextResponse.redirect(new URL(next, request.url));
+      // 303: POST 요청이므로 리다이렉트 후 GET으로 전환되도록 명시한다.
+      return NextResponse.redirect(new URL(next, request.url), 303);
     }
   }
 
   return NextResponse.redirect(
     new URL("/login?error=invalid-link", request.url),
+    303,
   );
 }
