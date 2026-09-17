@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { ConfirmDialog } from "@/components/common/Modal";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { PlaceFormModal } from "@/components/place/PlaceFormModal";
+import { PlacePhotoStrip } from "@/components/place/PlacePhotoStrip";
 import { ScheduleFormModal } from "@/components/schedule/ScheduleFormModal";
 import { ButtonLink } from "@/components/common/Button";
 import { DAY_KEYS, DAY_LABEL, PLACE_CATEGORY_EMOJI } from "@/lib/constants";
@@ -110,6 +111,15 @@ export function PlaceDetailView({ tripId, placeId }: PlaceDetailViewProps) {
           </div>
         ) : null}
       </section>
+
+      {place.photos && place.photos.length > 0 ? (
+        <section className="glass-soft rounded-[20px] p-5">
+          <h2 className="text-[15px] font-bold text-[#292533]">📷 사진</h2>
+          <div className="mt-3">
+            <PlacePhotoStrip photos={place.photos} size={120} />
+          </div>
+        </section>
+      ) : null}
 
       <section className="glass-soft rounded-[20px] p-5">
         <h2 className="text-[15px] font-bold text-[#292533]">영업시간</h2>

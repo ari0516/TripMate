@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/common/Button";
 import { Chip, Field, SelectInput, TextInput } from "@/components/common/Field";
 import { Modal } from "@/components/common/Modal";
+import { PlacePhotoStrip } from "@/components/place/PlacePhotoStrip";
 import { cn } from "@/lib/cn";
 import { DAY_KEYS, DAY_LABEL, PLACE_CATEGORIES } from "@/lib/constants";
 import type { PlaceSearchResult } from "@/lib/google-places";
@@ -68,6 +69,7 @@ export function PlaceFormModal({
   );
   const [mapUrl, setMapUrl] = useState(editing?.mapUrl ?? "");
   const [blogUrl, setBlogUrl] = useState(editing?.blogUrl ?? "");
+  const [photos, setPhotos] = useState<string[]>(editing?.photos ?? []);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -100,6 +102,7 @@ export function PlaceFormModal({
     setHours(toDraft(result.openingHours));
     setClosedDays(result.closedDays);
     if (result.mapUrl) setMapUrl(result.mapUrl);
+    setPhotos(result.photos);
     setSearchResults([]);
     setSearchQuery("");
     setErrors({});
@@ -133,6 +136,7 @@ export function PlaceFormModal({
       closedDays,
       mapUrl: mapUrl.trim() || undefined,
       blogUrl: blogUrl.trim() || undefined,
+      photos: photos.length > 0 ? photos : undefined,
     };
 
     if (editing) updatePlace(editing.id, payload);
@@ -206,6 +210,12 @@ export function PlaceFormModal({
             </div>
           ) : null}
         </Field>
+
+        {photos.length > 0 ? (
+          <Field label="사진">
+            <PlacePhotoStrip photos={photos} />
+          </Field>
+        ) : null}
 
         <Field label="장소명" required htmlFor="place-name" error={errors.name}>
           <TextInput

@@ -18,6 +18,8 @@ export interface PlaceSearchResult {
   openingHours: OpeningHours;
   closedDays: DayKey[];
   mapUrl?: string;
+  /** Google Places 사진 리소스 이름 목록 (최대 6장) */
+  photos: string[];
 }
 
 interface GoogleTimePoint {
@@ -31,13 +33,20 @@ interface GooglePeriod {
   close?: GoogleTimePoint;
 }
 
+interface GooglePhotoRaw {
+  name: string;
+}
+
 interface GooglePlaceRaw {
   id: string;
   displayName?: { text?: string };
   formattedAddress?: string;
   regularOpeningHours?: { periods?: GooglePeriod[] };
   googleMapsUri?: string;
+  photos?: GooglePhotoRaw[];
 }
+
+const MAX_PHOTOS = 6;
 
 function pad(n: number): string {
   return String(n).padStart(2, "0");
@@ -83,6 +92,7 @@ export function parseGooglePlace(raw: GooglePlaceRaw): PlaceSearchResult {
     openingHours,
     closedDays,
     mapUrl: raw.googleMapsUri,
+    photos: (raw.photos ?? []).slice(0, MAX_PHOTOS).map((p) => p.name),
   };
 }
 
@@ -96,7 +106,7 @@ export async function searchGooglePlaces(
       "Content-Type": "application/json",
       "X-Goog-Api-Key": apiKey,
       "X-Goog-FieldMask":
-        "places.id,places.displayName,places.formattedAddress,places.regularOpeningHours,places.googleMapsUri",
+        "places.id,places.displayName,places.formattedAddress,places.regularOpeningHours,places.googleMapsUri,places.photos",
     },
     body: JSON.stringify({ textQuery: query, languageCode: "ko" }),
   });

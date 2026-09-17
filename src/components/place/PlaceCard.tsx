@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { StatusBadge } from "@/components/common/StatusBadge";
+import { PlacePhotoStrip } from "@/components/place/PlacePhotoStrip";
 import { PLACE_CATEGORY_EMOJI } from "@/lib/constants";
 import { getCurrentOpenStatus } from "@/lib/opening-hours";
 import type { Place } from "@/lib/types";
@@ -40,6 +41,12 @@ export function PlaceCard({ place, tripId, onAddToSchedule }: PlaceCardProps) {
           </div>
         </div>
       </div>
+
+      {place.photos && place.photos.length > 0 ? (
+        <div className="mt-3.5">
+          <PlacePhotoStrip photos={place.photos} size={72} />
+        </div>
+      ) : null}
 
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-white/60 pt-3.5">
         {/* URL 이 없으면 버튼 자체를 렌더링하지 않는다 (01-feature-spec.md §6) */}

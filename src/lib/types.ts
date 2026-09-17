@@ -71,6 +71,8 @@ export interface Place {
   closedDays: DayKey[];
   mapUrl?: string;
   blogUrl?: string;
+  /** Google Places 사진 리소스 이름 목록 (장소 검색으로 자동 입력했을 때 채워짐) */
+  photos?: string[];
 }
 
 export interface Schedule {
