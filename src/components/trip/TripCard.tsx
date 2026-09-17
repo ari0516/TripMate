@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { formatDotDate, formatNumber, getDayCount } from "@/lib/date";
+import { currencyOf, formatMoney } from "@/lib/currency";
+import { formatDotDate, getDayCount } from "@/lib/date";
 import type { Trip } from "@/lib/types";
 
 interface TripCardProps {
@@ -11,6 +12,7 @@ interface TripCardProps {
 
 export function TripCard({ trip, scheduleCount, expenseTotal }: TripCardProps) {
   const days = getDayCount(trip.startDate, trip.endDate);
+  const currency = currencyOf(trip.country);
 
   return (
     <Link
@@ -32,7 +34,7 @@ export function TripCard({ trip, scheduleCount, expenseTotal }: TripCardProps) {
             {formatDotDate(trip.startDate)} ~ {formatDotDate(trip.endDate)}
           </p>
           <p className="mt-0.5 text-[12px] text-[#918b9c]">
-            {days}일 · 일일 예산 {formatNumber(trip.dailyBudget)}원
+            {days}일 · 일일 예산 {formatMoney(trip.dailyBudget, currency)}
           </p>
         </div>
         <span
@@ -49,7 +51,7 @@ export function TripCard({ trip, scheduleCount, expenseTotal }: TripCardProps) {
         </span>
         {expenseTotal > 0 ? (
           <span className="rounded-full bg-white/60 px-2.5 py-1">
-            지출 {formatNumber(expenseTotal)}원
+            지출 {formatMoney(expenseTotal, currency)}
           </span>
         ) : null}
       </div>

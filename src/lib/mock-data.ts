@@ -17,6 +17,7 @@ export const mockTrips: Trip[] = [
   {
     id: "trip-1",
     name: "도쿄 여행",
+    country: "일본",
     startDate: "2026-10-12",
     endDate: "2026-10-16",
     dailyBudget: 100000,
@@ -25,6 +26,7 @@ export const mockTrips: Trip[] = [
   {
     id: "trip-2",
     name: "방콕 여행",
+    country: "태국",
     startDate: "2026-11-01",
     endDate: "2026-11-05",
     dailyBudget: 80000,

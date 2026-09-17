@@ -8,7 +8,8 @@ import { ExpenseFormModal } from "@/components/expense/ExpenseFormModal";
 import { TripNotFound } from "@/components/trip/TripNotFound";
 import { getBudgetSummary } from "@/lib/budget";
 import { EXPENSE_CATEGORY_EMOJI } from "@/lib/constants";
-import { buildDateRange, formatFullKoreanDate, formatNumber } from "@/lib/date";
+import { currencyOf, formatMoney } from "@/lib/currency";
+import { buildDateRange, formatFullKoreanDate } from "@/lib/date";
 import type { Expense } from "@/lib/types";
 import { useHydrated, useTripStore } from "@/store/useTripStore";
 
@@ -34,6 +35,7 @@ export function ExpenseView({ tripId }: { tripId: string }) {
   if (!hydrated) return <ExpenseSkeleton />;
   if (!trip) return <TripNotFound />;
 
+  const currency = currencyOf(trip.country);
   const totalSpent = tripExpenses.reduce((sum, e) => sum + e.amount, 0);
 
   function openAddModal(date: string) {
@@ -56,7 +58,7 @@ export function ExpenseView({ tripId }: { tripId: string }) {
             💳 가계부
           </h1>
           <p className="mt-1 text-[13px] text-[#625d6d]">
-            여행 전체 지출 {formatNumber(totalSpent)}원
+            여행 전체 지출 {formatMoney(totalSpent, currency)}
           </p>
         </div>
         <Button className="shrink-0" onClick={() => openAddModal(dates[0] ?? "")}>
@@ -89,7 +91,7 @@ export function ExpenseView({ tripId }: { tripId: string }) {
                 </button>
               </div>
 
-              <BudgetCard summary={summary} />
+              <BudgetCard summary={summary} currency={currency} />
 
               {dayExpenses.length === 0 ? (
                 <p className="glass-soft rounded-[16px] px-4 py-5 text-center text-[13px] text-[#918b9c]">
@@ -118,7 +120,7 @@ export function ExpenseView({ tripId }: { tripId: string }) {
                         ) : null}
                       </div>
                       <span className="shrink-0 text-[14px] font-bold text-[#292533]">
-                        {formatNumber(expense.amount)}원
+                        {formatMoney(expense.amount, currency)}
                       </span>
                     </button>
                   ))}
@@ -139,6 +141,7 @@ export function ExpenseView({ tripId }: { tripId: string }) {
           dates={dates}
           defaultDate={modalDate || dates[0] || ""}
           editing={editing}
+          currency={currency}
         />
       ) : null}
     </div>

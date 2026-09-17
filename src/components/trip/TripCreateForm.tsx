@@ -5,8 +5,11 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { Button } from "@/components/common/Button";
-import { Field, TextInput } from "@/components/common/Field";
-import { formatNumber, getDayCount } from "@/lib/date";
+import { Field, SelectInput, TextInput } from "@/components/common/Field";
+import { COUNTRIES, COUNTRY_INFO, CURRENCY_STYLE } from "@/lib/constants";
+import { currencyOf, formatMoney } from "@/lib/currency";
+import { getDayCount } from "@/lib/date";
+import type { Country } from "@/lib/types";
 import { useTripStore } from "@/store/useTripStore";
 
 interface FormErrors {
@@ -20,10 +23,13 @@ export function TripCreateForm() {
   const addTrip = useTripStore((state) => state.addTrip);
 
   const [name, setName] = useState("");
+  const [country, setCountry] = useState<Country>("일본");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [budget, setBudget] = useState("100000");
   const [errors, setErrors] = useState<FormErrors>({});
+
+  const currency = currencyOf(country);
 
   const dayCount = useMemo(() => {
     if (!startDate || !endDate) return 0;
@@ -40,7 +46,7 @@ export function TripCreateForm() {
     }
     const budgetValue = Number(budget.replaceAll(",", ""));
     if (!Number.isFinite(budgetValue) || budgetValue < 0) {
-      next.budget = "예산은 0원 이상 입력해주세요.";
+      next.budget = "예산은 0 이상 입력해주세요.";
     }
     return next;
   }
@@ -53,10 +59,11 @@ export function TripCreateForm() {
 
     const trip = addTrip({
       name: name.trim(),
+      country,
       startDate,
       endDate,
       dailyBudget: Number(budget.replaceAll(",", "")),
-      emoji: "✈️",
+      emoji: COUNTRY_INFO[country].emoji,
     });
 
     router.push(`/trips/${trip.id}/schedule`);
@@ -95,6 +102,20 @@ export function TripCreateForm() {
             />
           </Field>
 
+          <Field label="나라" required htmlFor="trip-country">
+            <SelectInput
+              id="trip-country"
+              value={country}
+              onChange={(e) => setCountry(e.target.value as Country)}
+            >
+              {COUNTRIES.map((c) => (
+                <option key={c} value={c}>
+                  {COUNTRY_INFO[c].emoji} {c}
+                </option>
+              ))}
+            </SelectInput>
+          </Field>
+
           <Field label="여행 기간" required error={errors.date}>
             <div className="flex items-center gap-2">
               <TextInput
@@ -128,11 +149,21 @@ export function TripCreateForm() {
                 onChange={(e) =>
                   setBudget(e.target.value.replace(/[^0-9]/g, ""))
                 }
-                className="pr-12"
+                className={
+                  CURRENCY_STYLE[currency].position === "prefix"
+                    ? "pl-12"
+                    : "pr-12"
+                }
                 placeholder="100000"
               />
-              <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-sm text-[#918b9c]">
-                원
+              <span
+                className={
+                  CURRENCY_STYLE[currency].position === "prefix"
+                    ? "pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-sm text-[#918b9c]"
+                    : "pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-sm text-[#918b9c]"
+                }
+              >
+                {CURRENCY_STYLE[currency].symbol}
               </span>
             </div>
           </Field>
@@ -140,7 +171,7 @@ export function TripCreateForm() {
           {dayCount > 0 ? (
             <p className="rounded-[14px] bg-[#ede9fe]/70 px-4 py-3 text-center text-[13px] font-semibold text-[#6d3fd4]">
               총 {dayCount}일 · 예상 총 예산{" "}
-              {formatNumber(dayCount * Number(budget || 0))}원
+              {formatMoney(dayCount * Number(budget || 0), currency)}
             </p>
           ) : null}
         </div>

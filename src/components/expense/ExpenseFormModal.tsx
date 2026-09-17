@@ -5,9 +5,9 @@ import { useState } from "react";
 import { Button } from "@/components/common/Button";
 import { Chip, Field, SelectInput, TextArea, TextInput } from "@/components/common/Field";
 import { ConfirmDialog, Modal } from "@/components/common/Modal";
-import { EXPENSE_CATEGORIES } from "@/lib/constants";
+import { EXPENSE_CATEGORIES, CURRENCY_STYLE } from "@/lib/constants";
 import { formatDotDate } from "@/lib/date";
-import type { Expense, ExpenseCategory } from "@/lib/types";
+import type { CurrencyCode, Expense, ExpenseCategory } from "@/lib/types";
 import { useTripStore } from "@/store/useTripStore";
 
 /**
@@ -23,6 +23,7 @@ interface ExpenseFormModalProps {
   defaultDate: string;
   /** 수정 모드일 때 대상 지출 */
   editing?: Expense | null;
+  currency: CurrencyCode;
 }
 
 export function ExpenseFormModal({
@@ -31,6 +32,7 @@ export function ExpenseFormModal({
   dates,
   defaultDate,
   editing,
+  currency,
 }: ExpenseFormModalProps) {
   const addExpense = useTripStore((state) => state.addExpense);
   const updateExpense = useTripStore((state) => state.updateExpense);
@@ -113,19 +115,35 @@ export function ExpenseFormModal({
           </Field>
 
           <Field label="금액" required htmlFor="expense-amount" error={error}>
-            <TextInput
-              id="expense-amount"
-              type="number"
-              inputMode="numeric"
-              min={0}
-              step={100}
-              value={amount}
-              onChange={(e) => {
-                setAmount(e.target.value);
-                setError(null);
-              }}
-              placeholder="예) 18000"
-            />
+            <div className="relative">
+              <TextInput
+                id="expense-amount"
+                type="number"
+                inputMode="numeric"
+                min={0}
+                step={100}
+                value={amount}
+                onChange={(e) => {
+                  setAmount(e.target.value);
+                  setError(null);
+                }}
+                placeholder="예) 18000"
+                className={
+                  CURRENCY_STYLE[currency].position === "prefix"
+                    ? "pl-12"
+                    : "pr-12"
+                }
+              />
+              <span
+                className={
+                  CURRENCY_STYLE[currency].position === "prefix"
+                    ? "pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-sm text-[#918b9c]"
+                    : "pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-sm text-[#918b9c]"
+                }
+              >
+                {CURRENCY_STYLE[currency].symbol}
+              </span>
+            </div>
           </Field>
 
           <Field label="카테고리" required>

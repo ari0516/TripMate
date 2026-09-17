@@ -8,12 +8,12 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { TripNotFound } from "@/components/trip/TripNotFound";
 import { PLACE_CATEGORY_EMOJI } from "@/lib/constants";
+import { currencyOf, formatMoney } from "@/lib/currency";
 import {
   buildDateRange,
   formatDayLabel,
   formatDotDate,
   formatMonthDay,
-  formatNumber,
 } from "@/lib/date";
 import { getOpenStatus } from "@/lib/opening-hours";
 import { sortSchedules, useHydrated, useTripStore } from "@/store/useTripStore";
@@ -74,7 +74,7 @@ export function TripDashboard({ tripId }: { tripId: string }) {
         <SummaryTile label="저장한 장소" value={`${places.length}개`} />
         <SummaryTile
           label="일일 예산"
-          value={`${formatNumber(trip.dailyBudget)}원`}
+          value={formatMoney(trip.dailyBudget, currencyOf(trip.country))}
         />
       </section>
 

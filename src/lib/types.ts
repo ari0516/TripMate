@@ -7,6 +7,35 @@
 
 export type PlaceCategory = "맛집" | "카페" | "관광지" | "쇼핑" | "숙소" | "기타";
 
+/** 여행 국가 — 일일 예산·지출 통화를 결정한다 */
+export type Country =
+  | "대한민국"
+  | "일본"
+  | "태국"
+  | "베트남"
+  | "대만"
+  | "홍콩"
+  | "싱가포르"
+  | "필리핀"
+  | "중국"
+  | "미국"
+  | "영국"
+  | "유럽";
+
+export type CurrencyCode =
+  | "KRW"
+  | "JPY"
+  | "THB"
+  | "VND"
+  | "TWD"
+  | "HKD"
+  | "SGD"
+  | "PHP"
+  | "CNY"
+  | "USD"
+  | "GBP"
+  | "EUR";
+
 export type ExpenseCategory = "식비" | "교통" | "쇼핑" | "관광" | "숙박" | "기타";
 
 /** 요일 키 — openingHours / closedDays 에서 공통으로 사용 */
@@ -20,6 +49,8 @@ export type OpeningHours = Partial<Record<DayKey, OpeningHourRange | null>>;
 export interface Trip {
   id: string;
   name: string;
+  /** 예산·지출 통화를 결정한다 */
+  country: Country;
   /** YYYY-MM-DD */
   startDate: string;
   /** YYYY-MM-DD */

@@ -1,23 +1,35 @@
 import { BUDGET_STATUS_STYLE } from "@/lib/constants";
 import { cn } from "@/lib/cn";
-import { formatNumber } from "@/lib/date";
-import type { BudgetSummary } from "@/lib/types";
+import { formatMoney } from "@/lib/currency";
+import type { BudgetSummary, CurrencyCode } from "@/lib/types";
 
 /**
  * 일별 예산 사용 현황 카드.
  * 01-feature-spec.md §5-2 / 02-wireframe.md §15 기준.
  */
-export function BudgetCard({ summary }: { summary: BudgetSummary }) {
+export function BudgetCard({
+  summary,
+  currency,
+}: {
+  summary: BudgetSummary;
+  currency: CurrencyCode;
+}) {
   const style = BUDGET_STATUS_STYLE[summary.status];
 
   return (
     <div className="glass-base space-y-3 rounded-[20px] p-4">
       <div className="flex items-center justify-between text-[13px]">
         <span className="text-[#918b9c]">
-          일일 예산 <span className="font-semibold text-[#292533]">{formatNumber(summary.budget)}원</span>
+          일일 예산{" "}
+          <span className="font-semibold text-[#292533]">
+            {formatMoney(summary.budget, currency)}
+          </span>
         </span>
         <span className="text-[#918b9c]">
-          사용 금액 <span className="font-semibold text-[#292533]">{formatNumber(summary.spent)}원</span>
+          사용 금액{" "}
+          <span className="font-semibold text-[#292533]">
+            {formatMoney(summary.spent, currency)}
+          </span>
         </span>
       </div>
 
@@ -45,7 +57,7 @@ export function BudgetCard({ summary }: { summary: BudgetSummary }) {
         <span className="text-[#918b9c]">
           남은 예산{" "}
           <span className="font-semibold text-[#292533]">
-            {formatNumber(summary.remaining)}원
+            {formatMoney(summary.remaining, currency)}
           </span>
         </span>
       </div>

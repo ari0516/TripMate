@@ -1,5 +1,7 @@
 import type {
   BudgetStatus,
+  Country,
+  CurrencyCode,
   DayKey,
   ExpenseCategory,
   OpenStatus,
@@ -40,6 +42,57 @@ export const EXPENSE_CATEGORY_EMOJI: Record<ExpenseCategory, string> = {
   관광: "🎡",
   숙박: "🛏",
   기타: "✨",
+};
+
+export const COUNTRIES: Country[] = [
+  "대한민국",
+  "일본",
+  "태국",
+  "베트남",
+  "대만",
+  "홍콩",
+  "싱가포르",
+  "필리핀",
+  "중국",
+  "미국",
+  "영국",
+  "유럽",
+];
+
+export const COUNTRY_INFO: Record<
+  Country,
+  { emoji: string; currency: CurrencyCode }
+> = {
+  대한민국: { emoji: "🇰🇷", currency: "KRW" },
+  일본: { emoji: "🇯🇵", currency: "JPY" },
+  태국: { emoji: "🇹🇭", currency: "THB" },
+  베트남: { emoji: "🇻🇳", currency: "VND" },
+  대만: { emoji: "🇹🇼", currency: "TWD" },
+  홍콩: { emoji: "🇭🇰", currency: "HKD" },
+  싱가포르: { emoji: "🇸🇬", currency: "SGD" },
+  필리핀: { emoji: "🇵🇭", currency: "PHP" },
+  중국: { emoji: "🇨🇳", currency: "CNY" },
+  미국: { emoji: "🇺🇸", currency: "USD" },
+  영국: { emoji: "🇬🇧", currency: "GBP" },
+  유럽: { emoji: "🇪🇺", currency: "EUR" },
+};
+
+export const CURRENCY_STYLE: Record<
+  CurrencyCode,
+  { symbol: string; position: "prefix" | "suffix" }
+> = {
+  KRW: { symbol: "원", position: "suffix" },
+  JPY: { symbol: "¥", position: "prefix" },
+  THB: { symbol: "฿", position: "prefix" },
+  VND: { symbol: "₫", position: "suffix" },
+  TWD: { symbol: "NT$", position: "prefix" },
+  HKD: { symbol: "HK$", position: "prefix" },
+  SGD: { symbol: "S$", position: "prefix" },
+  PHP: { symbol: "₱", position: "prefix" },
+  CNY: { symbol: "¥", position: "prefix" },
+  USD: { symbol: "$", position: "prefix" },
+  GBP: { symbol: "£", position: "prefix" },
+  EUR: { symbol: "€", position: "prefix" },
 };
 
 export const DAY_KEYS: DayKey[] = [
