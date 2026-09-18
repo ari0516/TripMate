@@ -23,6 +23,24 @@ import type {
 // v4: TravelDocument(서류함)가 추가되어 이전 스키마와 호환되지 않는다.
 const STORAGE_KEY = "tripmate-store-v4";
 
+/**
+ * 사진 기능이 추가되기 전에 저장된 브라우저에도, 기본 mock 장소(place-1 등)에는
+ * mock-data.ts 의 최신 사진을 채워 넣는다. 사용자가 직접 만든 데이터는 건드리지 않는다.
+ */
+const MOCK_PLACE_PHOTOS: Record<string, string[]> = Object.fromEntries(
+  mockPlaces
+    .filter((p) => p.photos && p.photos.length > 0)
+    .map((p) => [p.id, p.photos as string[]]),
+);
+
+function backfillMockPhotos(places: Place[]): Place[] {
+  return places.map((p) =>
+    (!p.photos || p.photos.length === 0) && MOCK_PLACE_PHOTOS[p.id]
+      ? { ...p, photos: MOCK_PLACE_PHOTOS[p.id] }
+      : p,
+  );
+}
+
 function createId(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 }
@@ -175,6 +193,14 @@ export const useTripStore = create<TripState>()(
         expenses: state.expenses,
         documents: state.documents,
       }),
+      merge: (persistedState, currentState) => {
+        const merged = {
+          ...currentState,
+          ...(persistedState as Partial<TripState>),
+        };
+        merged.places = backfillMockPhotos(merged.places);
+        return merged;
+      },
     },
   ),
 );
