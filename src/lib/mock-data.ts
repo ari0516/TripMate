@@ -1,4 +1,11 @@
-import type { Expense, OpeningHours, Place, Schedule, Trip } from "./types";
+import type {
+  Expense,
+  OpeningHours,
+  Place,
+  Schedule,
+  TravelDocument,
+  Trip,
+} from "./types";
 
 /** 모든 요일에 동일한 영업시간을 적용하는 헬퍼 */
 function everyday(open: string, close: string): OpeningHours {
@@ -177,3 +184,6 @@ export const mockExpenses: Expense[] = [
     memo: "기념품",
   },
 ];
+
+/** 서류함(티켓·쿠폰·입국심사 서류) 초기 데이터 — MVP는 빈 상태로 시작한다 */
+export const mockDocuments: TravelDocument[] = [];

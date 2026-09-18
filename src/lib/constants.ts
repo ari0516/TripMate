@@ -3,6 +3,7 @@ import type {
   Country,
   CurrencyCode,
   DayKey,
+  DocumentCategory,
   ExpenseCategory,
   OpenStatus,
   PlaceCategory,
@@ -41,6 +42,20 @@ export const EXPENSE_CATEGORY_EMOJI: Record<ExpenseCategory, string> = {
   쇼핑: "🛍",
   관광: "🎡",
   숙박: "🛏",
+  기타: "✨",
+};
+
+export const DOCUMENT_CATEGORIES: DocumentCategory[] = [
+  "티켓",
+  "쿠폰",
+  "서류",
+  "기타",
+];
+
+export const DOCUMENT_CATEGORY_EMOJI: Record<DocumentCategory, string> = {
+  티켓: "🎫",
+  쿠폰: "🏷",
+  서류: "📄",
   기타: "✨",
 };
 

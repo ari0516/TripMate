@@ -40,4 +40,12 @@ export const TRIP_NAV_ITEMS: NavItem[] = [
     isActive: (pathname, tripId) =>
       pathname.startsWith(`/trips/${tripId}/expenses`),
   },
+  {
+    key: "documents",
+    label: "서류함",
+    icon: "🎫",
+    href: (tripId) => `/trips/${tripId}/documents`,
+    isActive: (pathname, tripId) =>
+      pathname.startsWith(`/trips/${tripId}/documents`),
+  },
 ];

@@ -5,16 +5,23 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import {
+  mockDocuments,
   mockExpenses,
   mockPlaces,
   mockSchedules,
   mockTrips,
 } from "@/lib/mock-data";
 import { timeToMinutes } from "@/lib/date";
-import type { Expense, Place, Schedule, Trip } from "@/lib/types";
+import type {
+  Expense,
+  Place,
+  Schedule,
+  TravelDocument,
+  Trip,
+} from "@/lib/types";
 
-// v3: Trip에 country가 추가되어 이전 스키마와 호환되지 않는다.
-const STORAGE_KEY = "tripmate-store-v3";
+// v4: TravelDocument(서류함)가 추가되어 이전 스키마와 호환되지 않는다.
+const STORAGE_KEY = "tripmate-store-v4";
 
 function createId(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
@@ -25,6 +32,7 @@ interface TripState {
   places: Place[];
   schedules: Schedule[];
   expenses: Expense[];
+  documents: TravelDocument[];
 
   // Trip
   addTrip: (input: Omit<Trip, "id">) => Trip;
@@ -46,6 +54,14 @@ interface TripState {
   updateExpense: (id: string, patch: Partial<Omit<Expense, "id">>) => void;
   removeExpense: (id: string) => void;
 
+  // Document (서류함)
+  addDocument: (input: Omit<TravelDocument, "id">) => TravelDocument;
+  updateDocument: (
+    id: string,
+    patch: Partial<Omit<TravelDocument, "id">>,
+  ) => void;
+  removeDocument: (id: string) => void;
+
   /** 모든 데이터를 초기 mock 상태로 되돌린다. */
   resetToMock: () => void;
 }
@@ -57,6 +73,7 @@ export const useTripStore = create<TripState>()(
       places: mockPlaces,
       schedules: mockSchedules,
       expenses: mockExpenses,
+      documents: mockDocuments,
 
       addTrip: (input) => {
         const trip: Trip = { ...input, id: createId("trip") };
@@ -72,6 +89,7 @@ export const useTripStore = create<TripState>()(
           trips: state.trips.filter((t) => t.id !== id),
           schedules: state.schedules.filter((s) => s.tripId !== id),
           expenses: state.expenses.filter((e) => e.tripId !== id),
+          documents: state.documents.filter((d) => d.tripId !== id),
         })),
 
       addPlace: (input) => {
@@ -123,12 +141,29 @@ export const useTripStore = create<TripState>()(
           expenses: state.expenses.filter((e) => e.id !== id),
         })),
 
+      addDocument: (input) => {
+        const document: TravelDocument = { ...input, id: createId("doc") };
+        set((state) => ({ documents: [...state.documents, document] }));
+        return document;
+      },
+      updateDocument: (id, patch) =>
+        set((state) => ({
+          documents: state.documents.map((d) =>
+            d.id === id ? { ...d, ...patch } : d,
+          ),
+        })),
+      removeDocument: (id) =>
+        set((state) => ({
+          documents: state.documents.filter((d) => d.id !== id),
+        })),
+
       resetToMock: () =>
         set({
           trips: mockTrips,
           places: mockPlaces,
           schedules: mockSchedules,
           expenses: mockExpenses,
+          documents: mockDocuments,
         }),
     }),
     {
@@ -138,6 +173,7 @@ export const useTripStore = create<TripState>()(
         places: state.places,
         schedules: state.schedules,
         expenses: state.expenses,
+        documents: state.documents,
       }),
     },
   ),

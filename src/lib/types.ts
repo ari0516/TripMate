@@ -98,6 +98,19 @@ export interface Expense {
   memo?: string;
 }
 
+export type DocumentCategory = "티켓" | "쿠폰" | "서류" | "기타";
+
+/** 발급받은 티켓·쿠폰·입국심사용 서류를 사진으로 보관한다 */
+export interface TravelDocument {
+  id: string;
+  tripId: string;
+  title: string;
+  category: DocumentCategory;
+  /** 압축된 이미지의 base64 data URL */
+  imageDataUrl: string;
+  memo?: string;
+}
+
 /** 장소 운영 상태 */
 export type OpenStatus = "open" | "closed" | "dayoff" | "unknown";
 
